@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
-function App() {
+const App: React.FC = () => {
+  const [recipeFound, setRecipeFound] = useState([]);
+  const [recipeSearch, setRecipeSearch] = useState('');
+
+  const searchForRecipes = async (query: string): Promise<any> => {
+    const result = await fetch(`http://localhost:3001/?search=${query}`);
+    return (await result.json()).results;
+  };
+
+  useEffect(() => {
+    (async () => {
+      const query = encodeURIComponent(recipeSearch);
+      const response = await searchForRecipes(query);
+      setRecipeFound(response);
+    })();
+  }, [recipeSearch]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Recipe Search App</h1>
+      <form className="searchForm">
+        <input type="text" id="searchText" />
+        <button>Search</button>
+      </form>
     </div>
   );
-}
+};
 
 export default App;
