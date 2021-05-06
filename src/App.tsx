@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import './App.css';
 
 const App: React.FC = () => {
@@ -8,6 +8,13 @@ const App: React.FC = () => {
   const searchForRecipes = async (query: string): Promise<any> => {
     const result = await fetch(`http://localhost:3001/?search=${query}`);
     return (await result.json()).results;
+  };
+
+  const search = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.target as HTMLFormElement;
+    const input = form.querySelector('#searchText') as HTMLInputElement;
+    setRecipeSearch(input.value);
   };
 
   useEffect(() => {
